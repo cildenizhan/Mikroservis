@@ -10,7 +10,7 @@ describe('Dispatcher (API Gateway) Testleri', () => {
         expect(response.text).toBe('OK'); 
     });
 
-    it('Yanlış bir URL girilirse 404 hatası veriyor mu testi', async () => {
+    it('Yanlış bir URL girilirse 404 hatası veriyor mu testicd dispatcher', async () => {
         const response = await request(app).get('/api/olmayan-rota');
         expect(response.status).toBe(404);
     });

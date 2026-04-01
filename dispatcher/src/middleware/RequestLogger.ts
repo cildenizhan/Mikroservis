@@ -1,6 +1,3 @@
-/**
- * LogEntry arayüzü - Her bir log kaydının yapısını tanımlar
- */
 export interface LogEntry {
     timestamp: string;
     method: string;
@@ -9,21 +6,9 @@ export interface LogEntry {
     responseTime: number;
 }
 
-/**
- * RequestLogger sınıfı - Gelen HTTP isteklerini loglayan middleware
- * 
- * Singleton pattern kullanarak tüm logları merkezi olarak yönetir.
- * Her istek için zaman damgası, HTTP metodu, URL, durum kodu ve
- * yanıt süresini kaydeder.
- */
 export class RequestLogger {
     private static logs: LogEntry[] = [];
 
-    /**
-     * Express middleware fonksiyonu
-     * İstek geldiğinde başlangıç zamanını kaydeder,
-     * yanıt gönderildiğinde log kaydı oluşturur.
-     */
     public static middleware(req: any, res: any, next: any): void {
         const startTime = Date.now();
         const originalSend = res.send;
@@ -48,7 +33,6 @@ export class RequestLogger {
             );
         };
 
-        // res.send'i override ederek loglama yapıyoruz
         let logged = false;
 
         res.send = function (...args: any[]) {
@@ -78,23 +62,14 @@ export class RequestLogger {
         next();
     }
 
-    /**
-     * Tüm log kayıtlarını döndürür
-     */
     public static getLogs(): LogEntry[] {
         return [...RequestLogger.logs];
     }
 
-    /**
-     * Tüm log kayıtlarını temizler (test amaçlı)
-     */
     public static clearLogs(): void {
         RequestLogger.logs = [];
     }
 
-    /**
-     * Son N log kaydını döndürür
-     */
     public static getRecentLogs(count: number): LogEntry[] {
         return RequestLogger.logs.slice(-count);
     }

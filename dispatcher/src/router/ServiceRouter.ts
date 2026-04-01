@@ -1,25 +1,12 @@
 import { ServiceConfig, findServiceByPath } from '../config/services';
 import http from 'http';
 
-/**
- * ServiceRouter sınıfı - İstekleri ilgili mikroservise yönlendiren proxy
- * 
- * Dispatcher'a gelen istekleri URL yapısına göre doğru mikroservise
- * iletir ve yanıtı istemciye geri döndürür.
- * 
- * Richardson Maturity Model Seviye 2: HTTP metotları korunarak yönlendirme yapılır
- */
 export class ServiceRouter {
 
-    /**
-     * Express middleware olarak çalışır
-     * Gelen isteği uygun mikroservise proxy olarak iletir
-     */
     public static proxyRequest(req: any, res: any, next: any): void {
         const service = findServiceByPath(req.originalUrl || req.url);
 
         if (!service) {
-            // Tanımsız rota - bir sonraki middleware'e (404 handler) geç
             next();
             return;
         }
@@ -27,14 +14,8 @@ export class ServiceRouter {
         ServiceRouter.forwardRequest(req, res, service);
     }
 
-    /**
-     * İsteği hedef mikroservise iletir
-     * HTTP metodu, header'lar ve body korunarak proxy yapılır
-     */
     private static forwardRequest(req: any, res: any, service: ServiceConfig): void {
         const url = new URL(service.baseUrl);
-        
-        // Prefix'ten sonraki kısmı hedef servise ilet
         const targetPath = (req.originalUrl || req.url).replace(service.prefix, '') || '/';
 
         const options: http.RequestOptions = {
@@ -49,7 +30,6 @@ export class ServiceRouter {
         };
 
         const proxyReq = http.request(options, (proxyRes) => {
-            // Hedef servisin status kodunu ve header'larını koru
             res.writeHead(proxyRes.statusCode || 500, proxyRes.headers);
             proxyRes.pipe(res, { end: true });
         });
@@ -58,13 +38,12 @@ export class ServiceRouter {
             console.error(`[ServiceRouter] ${service.name} servisi ulasilamaz: ${error.message}`);
             res.status(503).json({
                 error: true,
-                message: `${service.name} servisi su anda ulasılamaz durumda`,
+                message: `${service.name} servisi su anda ulasilamaz durumda`,
                 service: service.name,
                 timestamp: new Date().toISOString()
             });
         });
 
-        // Body varsa proxy isteğine yaz
         if (req.body && Object.keys(req.body).length > 0) {
             const bodyData = JSON.stringify(req.body);
             proxyReq.setHeader('Content-Type', 'application/json');

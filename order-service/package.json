@@ -1,7 +1,7 @@
 {
-  "name": "dispatcher",
+  "name": "order-service",
   "version": "1.0.0",
-  "description": "",
+  "description": "Siparis yonetimi servisi",
   "main": "index.js",
   "scripts": {
     "test": "jest",

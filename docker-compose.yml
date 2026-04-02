@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  auth-service:
+    build: 
+      context: ./auth-service
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./auth-service/data:/usr/src/app/data
+    environment:
+      - PORT=3001
+
+  product-service:
+    build: 
+      context: ./product-service
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./product-service/data:/usr/src/app/data
+    environment:
+      - PORT=3002
+
+  order-service:
+    build: 
+      context: ./order-service
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3003"
+    volumes:
+      - ./order-service/data:/usr/src/app/data
+    environment:
+      - PORT=3003
+
+  dispatcher:
+    build: 
+      context: ./dispatcher
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - AUTH_SERVICE_URL=http://auth-service:3001
+      - PRODUCT_SERVICE_URL=http://product-service:3002
+      - ORDER_SERVICE_URL=http://order-service:3003
+    depends_on:
+      - auth-service
+      - product-service
+      - order-service

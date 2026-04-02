@@ -101,4 +101,43 @@ router.post('/login', (req: Request, res: Response): void => {
     });
 });
 
+router.get('/users', (req: Request, res: Response): void => {
+    const users = userDb.findAll().map(({ password, ...rest }) => rest);
+    res.status(200).json(users);
+});
+
+router.get('/users/:id', (req: Request, res: Response): void => {
+    const id = req.params['id'] as string;
+    const user = userDb.findById(id);
+
+    if (!user) {
+        res.status(404).json({
+            error: true,
+            message: 'Kullanici bulunamadi'
+        });
+        return;
+    }
+
+    const { password, ...safeUser } = user;
+    res.status(200).json(safeUser);
+});
+
+router.delete('/users/:id', (req: Request, res: Response): void => {
+    const id = req.params['id'] as string;
+    const user = userDb.findById(id);
+
+    if (!user) {
+        res.status(404).json({
+            error: true,
+            message: 'Kullanici bulunamadi'
+        });
+        return;
+    }
+
+    userDb.delete(id);
+    res.status(200).json({
+        message: `${user.username} kullanicisi silindi`
+    });
+});
+
 export default router;

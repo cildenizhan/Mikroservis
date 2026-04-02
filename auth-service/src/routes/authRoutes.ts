@@ -1,143 +1,124 @@
 import { Router, Request, Response } from 'express';
-import { JsonDatabase } from '../database/JsonDatabase';
+import { UserModel } from '../models/UserModel.js';
 import crypto from 'crypto';
-import path from 'path';
-
-interface User {
-    id: string;
-    username: string;
-    email: string;
-    password: string;
-}
-
-const DB_PATH = path.join(__dirname, '..', '..', 'data', 'users.json');
-const userDb = new JsonDatabase<User>(DB_PATH);
+import jwt from 'jsonwebtoken';
 
 const router = Router();
 
-router.post('/register', (req: Request, res: Response): void => {
-    const { username, email, password } = req.body;
+router.post('/register', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { username, email, password } = req.body;
 
-    if (!username || !email || !password) {
-        res.status(400).json({
-            error: true,
-            message: 'username, email ve password alanlari zorunludur'
+        if (!username || !email || !password) {
+            res.status(400).json({ error: true, message: 'username, email ve password alanlari zorunludur' });
+            return;
+        }
+
+        const existingUsername = await UserModel.findOne({ username });
+        if (existingUsername) {
+            res.status(409).json({ error: true, message: 'Bu username zaten kullaniliyor' });
+            return;
+        }
+
+        const existingEmail = await UserModel.findOne({ email });
+        if (existingEmail) {
+            res.status(409).json({ error: true, message: 'Bu email zaten kullaniliyor' });
+            return;
+        }
+
+        const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+
+        const newUser = new UserModel({
+            id: crypto.randomUUID(),
+            username,
+            email,
+            password: hashedPassword
         });
-        return;
-    }
 
-    const existingUsers = userDb.findAll();
-    const usernameExists = existingUsers.find(u => u.username === username);
-    if (usernameExists) {
-        res.status(409).json({
-            error: true,
-            message: 'Bu username zaten kullaniliyor'
+        await newUser.save();
+
+        res.status(201).json({
+            id: newUser.id,
+            username: newUser.username,
+            email: newUser.email
         });
-        return;
+    } catch (error) {
+        res.status(500).json({ error: true, message: 'Sunucu hatasi' });
     }
-
-    const emailExists = existingUsers.find(u => u.email === email);
-    if (emailExists) {
-        res.status(409).json({
-            error: true,
-            message: 'Bu email zaten kullaniliyor'
-        });
-        return;
-    }
-
-    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
-
-    const newUser = userDb.create({
-        id: crypto.randomUUID(),
-        username,
-        email,
-        password: hashedPassword
-    });
-
-    res.status(201).json({
-        id: newUser.id,
-        username: newUser.username,
-        email: newUser.email
-    });
 });
 
-router.post('/login', (req: Request, res: Response): void => {
-    const { username, password } = req.body;
+router.post('/login', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { username, password } = req.body;
 
-    if (!username || !password) {
-        res.status(400).json({
-            error: true,
-            message: 'username ve password alanlari zorunludur'
+        if (!username || !password) {
+            res.status(400).json({ error: true, message: 'username ve password alanlari zorunludur' });
+            return;
+        }
+
+        const user = await UserModel.findOne({ username });
+        if (!user) {
+            res.status(401).json({ error: true, message: 'Gecersiz kullanici adi veya sifre' });
+            return;
+        }
+
+        const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+        if (user.password !== hashedPassword) {
+            res.status(401).json({ error: true, message: 'Gecersiz kullanici adi veya sifre' });
+            return;
+        }
+
+        const token = jwt.sign(
+            { id: user.id, username: user.username, email: user.email },
+            process.env['JWT_SECRET'] || 'super_secret_dispatcher_key',
+            { expiresIn: '1h' }
+        );
+
+        res.status(200).json({
+            token,
+            username: user.username,
+            email: user.email
         });
-        return;
+    } catch (error) {
+        res.status(500).json({ error: true, message: 'Sunucu hatasi' });
     }
-
-    const users = userDb.findAll();
-    const user = users.find(u => u.username === username);
-
-    if (!user) {
-        res.status(401).json({
-            error: true,
-            message: 'Gecersiz kullanici adi veya sifre'
-        });
-        return;
-    }
-
-    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
-    if (user.password !== hashedPassword) {
-        res.status(401).json({
-            error: true,
-            message: 'Gecersiz kullanici adi veya sifre'
-        });
-        return;
-    }
-
-    const token = crypto.randomBytes(32).toString('hex');
-
-    res.status(200).json({
-        token,
-        username: user.username,
-        email: user.email
-    });
 });
 
-router.get('/users', (req: Request, res: Response): void => {
-    const users = userDb.findAll().map(({ password, ...rest }) => rest);
-    res.status(200).json(users);
+router.get('/users', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const users = await UserModel.find({}, { _id: 0, password: 0, __v: 0, createdAt: 0, updatedAt: 0 });
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ error: true, message: 'Sunucu hatasi' });
+    }
 });
 
-router.get('/users/:id', (req: Request, res: Response): void => {
-    const id = req.params['id'] as string;
-    const user = userDb.findById(id);
-
-    if (!user) {
-        res.status(404).json({
-            error: true,
-            message: 'Kullanici bulunamadi'
-        });
-        return;
+router.get('/users/:id', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const id = req.params['id'] as string;
+        const user = await UserModel.findOne({ id }, { _id: 0, password: 0, __v: 0, createdAt: 0, updatedAt: 0 });
+        if (!user) {
+            res.status(404).json({ error: true, message: 'Kullanici bulunamadi' });
+            return;
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ error: true, message: 'Sunucu hatasi' });
     }
-
-    const { password, ...safeUser } = user;
-    res.status(200).json(safeUser);
 });
 
-router.delete('/users/:id', (req: Request, res: Response): void => {
-    const id = req.params['id'] as string;
-    const user = userDb.findById(id);
-
-    if (!user) {
-        res.status(404).json({
-            error: true,
-            message: 'Kullanici bulunamadi'
-        });
-        return;
+router.delete('/users/:id', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const id = req.params['id'] as string;
+        const user = await UserModel.findOneAndDelete({ id });
+        if (!user) {
+            res.status(404).json({ error: true, message: 'Kullanici bulunamadi' });
+            return;
+        }
+        res.status(200).json({ message: `${user.username} kullanicisi silindi` });
+    } catch (error) {
+        res.status(500).json({ error: true, message: 'Sunucu hatasi' });
     }
-
-    userDb.delete(id);
-    res.status(200).json({
-        message: `${user.username} kullanicisi silindi`
-    });
 });
 
 export default router;

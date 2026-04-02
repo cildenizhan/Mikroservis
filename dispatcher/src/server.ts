@@ -1,6 +1,10 @@
 import express from 'express';
-import { RequestLogger } from './middleware/RequestLogger';
-import { ServiceRouter } from './router/ServiceRouter';
+import { RequestLogger } from './middleware/RequestLogger.js';
+import { ServiceRouter } from './router/ServiceRouter.js';
+import { AuthMiddleware } from './middleware/AuthMiddleware.js';
+import promBundle from 'express-prom-bundle';
+
+const metricsMiddleware = promBundle({includeMethod: true, includePath: true});
 
 class Server {
     public app: express.Application;
@@ -14,8 +18,10 @@ class Server {
     }
 
     private setupMiddlewares(): void {
+        this.app.use(metricsMiddleware);
         this.app.use(express.json());
         this.app.use(RequestLogger.middleware);
+        this.app.use(AuthMiddleware.verifyToken);
     }
 
     private routes(): void {

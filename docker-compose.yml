@@ -1,38 +1,43 @@
 version: '3.8'
 
 services:
+  mongo:
+    image: mongo:latest
+    container_name: mongodb_server
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
   auth-service:
     build: 
       context: ./auth-service
       dockerfile: Dockerfile
-    ports:
-      - "3001:3001"
-    volumes:
-      - ./auth-service/data:/usr/src/app/data
     environment:
       - PORT=3001
+      - MONGO_URI=mongodb://mongo:27017/auth_db
+    depends_on:
+      - mongo
 
   product-service:
     build: 
       context: ./product-service
       dockerfile: Dockerfile
-    ports:
-      - "3002:3002"
-    volumes:
-      - ./product-service/data:/usr/src/app/data
     environment:
       - PORT=3002
+      - MONGO_URI=mongodb://mongo:27017/product_db
+    depends_on:
+      - mongo
 
   order-service:
     build: 
       context: ./order-service
       dockerfile: Dockerfile
-    ports:
-      - "3003:3003"
-    volumes:
-      - ./order-service/data:/usr/src/app/data
     environment:
       - PORT=3003
+      - MONGO_URI=mongodb://mongo:27017/order_db
+    depends_on:
+      - mongo
 
   dispatcher:
     build: 
@@ -45,7 +50,25 @@ services:
       - AUTH_SERVICE_URL=http://auth-service:3001
       - PRODUCT_SERVICE_URL=http://product-service:3002
       - ORDER_SERVICE_URL=http://order-service:3003
+      - JWT_SECRET=super_secret_dispatcher_key
     depends_on:
       - auth-service
       - product-service
       - order-service
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3004:3000"
+    depends_on:
+      - prometheus
+
+volumes:
+  mongo_data:

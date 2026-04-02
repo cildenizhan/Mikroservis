@@ -41,10 +41,12 @@ export class JsonDatabase<T extends HasId> {
     }
 
     public findAll(): T[] {
+        this.data = this.loadFromFile();
         return [...this.data];
     }
 
     public findById(id: string): T | undefined {
+        this.data = this.loadFromFile();
         return this.data.find(item => item.id === id);
     }
 

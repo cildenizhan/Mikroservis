@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import app from '../src/server';
+import app from '../src/server.js';
 import fs from 'fs';
 import path from 'path';
 

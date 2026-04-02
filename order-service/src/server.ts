@@ -1,5 +1,5 @@
 import express from 'express';
-import orderRoutes from './routes/orderRoutes';
+import orderRoutes from './routes/orderRoutes.js';
 
 class OrderServer {
     public app: express.Application;

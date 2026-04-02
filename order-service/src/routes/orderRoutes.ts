@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { JsonDatabase } from '../database/JsonDatabase';
+import { JsonDatabase } from '../database/JsonDatabase.js';
 import crypto from 'crypto';
 import path from 'path';
 

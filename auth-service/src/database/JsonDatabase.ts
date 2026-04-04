@@ -1,11 +1,12 @@
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
+import { IDatabase } from './IDatabase';
 
 interface HasId {
     id: string;
 }
 
-export class JsonDatabase<T extends HasId> {
+export class JsonDatabase<T extends HasId> implements IDatabase<T> {
     private filePath: string;
     private data: T[];
 

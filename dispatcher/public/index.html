@@ -263,13 +263,17 @@
         <div class="swagger-item get">
             <div class="swagger-header" onclick="toggleSwagger('auth-get-3')">
                 <span class="method get">GET</span>
-                <span class="endpoint">/api/auth/users/1</span>
+                <span class="endpoint">/api/auth/users/:id</span>
                 <span class="desc">Belirli bir kullanıcıyı getir.</span>
             </div>
             <div class="swagger-body" id="swagger-auth-get-3">
                 <div class="swagger-input">
                     <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px;">Gövde (Body) gerektirmez.</p>
-                    <button class="try-btn execute" onclick="executeApi('GET', '/api/auth/users/1', null, 'res-auth-get-3')">Test Et (Execute)</button>
+                    <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                        <label style="font-size: 13px; color: var(--text-secondary);">Hedef ID:</label>
+                        <input type="text" id="dyn-id-1" placeholder="Kayıt ID'sini girin..." style="background: var(--bg-main); border: 1px solid var(--border-glass); color: var(--text-primary); padding: 6px 10px; border-radius: 4px; font-size: 13px; font-family: monospace; flex: 1;" />
+                    </div>
+                    <button class="try-btn execute" onclick="executeApi('GET', '/api/auth/users/' + (document.getElementById('dyn-id-1').value || '1'), null, 'res-auth-get-3')">Test Et (Execute)</button>
                 </div>
                 <div class="swagger-output">
                     <label>Response</label>
@@ -281,13 +285,17 @@
         <div class="swagger-item delete">
             <div class="swagger-header" onclick="toggleSwagger('auth-delete-4')">
                 <span class="method delete">DELETE</span>
-                <span class="endpoint">/api/auth/users/1</span>
+                <span class="endpoint">/api/auth/users/:id</span>
                 <span class="desc">Kullanıcı sil (Admin).</span>
             </div>
             <div class="swagger-body" id="swagger-auth-delete-4">
                 <div class="swagger-input">
                     <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px;">Gövde (Body) gerektirmez.</p>
-                    <button class="try-btn execute" onclick="executeApi('DELETE', '/api/auth/users/1', null, 'res-auth-delete-4')">Test Et (Execute)</button>
+                    <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                        <label style="font-size: 13px; color: var(--text-secondary);">Hedef ID:</label>
+                        <input type="text" id="dyn-id-2" placeholder="Kayıt ID'sini girin..." style="background: var(--bg-main); border: 1px solid var(--border-glass); color: var(--text-primary); padding: 6px 10px; border-radius: 4px; font-size: 13px; font-family: monospace; flex: 1;" />
+                    </div>
+                    <button class="try-btn execute" onclick="executeApi('DELETE', '/api/auth/users/' + (document.getElementById('dyn-id-2').value || '1'), null, 'res-auth-delete-4')">Test Et (Execute)</button>
                 </div>
                 <div class="swagger-output">
                     <label>Response</label>
@@ -336,13 +344,17 @@
         <div class="swagger-item get">
             <div class="swagger-header" onclick="toggleSwagger('prod-get-7')">
                 <span class="method get">GET</span>
-                <span class="endpoint">/api/products/1</span>
+                <span class="endpoint">/api/products/:id</span>
                 <span class="desc">Tekil ürün detayını getir.</span>
             </div>
             <div class="swagger-body" id="swagger-prod-get-7">
                 <div class="swagger-input">
                     <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px;">Gövde (Body) gerektirmez.</p>
-                    <button class="try-btn execute" onclick="executeApi('GET', '/api/products/1', null, 'res-prod-get-7')">Test Et (Execute)</button>
+                    <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                        <label style="font-size: 13px; color: var(--text-secondary);">Hedef ID:</label>
+                        <input type="text" id="dyn-id-3" placeholder="Kayıt ID'sini girin..." style="background: var(--bg-main); border: 1px solid var(--border-glass); color: var(--text-primary); padding: 6px 10px; border-radius: 4px; font-size: 13px; font-family: monospace; flex: 1;" />
+                    </div>
+                    <button class="try-btn execute" onclick="executeApi('GET', '/api/products/' + (document.getElementById('dyn-id-3').value || '1'), null, 'res-prod-get-7')">Test Et (Execute)</button>
                 </div>
                 <div class="swagger-output">
                     <label>Response</label>
@@ -354,14 +366,18 @@
         <div class="swagger-item put">
             <div class="swagger-header" onclick="toggleSwagger('prod-put-8')">
                 <span class="method put">PUT</span>
-                <span class="endpoint">/api/products/1</span>
+                <span class="endpoint">/api/products/:id</span>
                 <span class="desc">Ürünü güncelle. (Auth Token)</span>
             </div>
             <div class="swagger-body" id="swagger-prod-put-8">
                 <div class="swagger-input">
                     <label>Request Body (JSON)</label>
                     <textarea id="body-prod-put-8">{"name": "Laptop Premium", "price": 18000, "stock": 5}</textarea>
-                    <button class="try-btn execute" onclick="executeApi('PUT', '/api/products/1', 'body-prod-put-8', 'res-prod-put-8')">Test Et (Execute)</button>
+                    <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                        <label style="font-size: 13px; color: var(--text-secondary);">Hedef ID:</label>
+                        <input type="text" id="dyn-id-4" placeholder="Kayıt ID'sini girin..." style="background: var(--bg-main); border: 1px solid var(--border-glass); color: var(--text-primary); padding: 6px 10px; border-radius: 4px; font-size: 13px; font-family: monospace; flex: 1;" />
+                    </div>
+                    <button class="try-btn execute" onclick="executeApi('PUT', '/api/products/' + (document.getElementById('dyn-id-4').value || '1'), 'body-prod-put-8', 'res-prod-put-8')">Test Et (Execute)</button>
                 </div>
                 <div class="swagger-output">
                     <label>Response</label>
@@ -373,13 +389,17 @@
         <div class="swagger-item delete">
             <div class="swagger-header" onclick="toggleSwagger('prod-delete-9')">
                 <span class="method delete">DELETE</span>
-                <span class="endpoint">/api/products/1</span>
+                <span class="endpoint">/api/products/:id</span>
                 <span class="desc">Ürün sil. (Auth Token)</span>
             </div>
             <div class="swagger-body" id="swagger-prod-delete-9">
                 <div class="swagger-input">
                     <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px;">Gövde (Body) gerektirmez.</p>
-                    <button class="try-btn execute" onclick="executeApi('DELETE', '/api/products/1', null, 'res-prod-delete-9')">Test Et (Execute)</button>
+                    <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                        <label style="font-size: 13px; color: var(--text-secondary);">Hedef ID:</label>
+                        <input type="text" id="dyn-id-5" placeholder="Kayıt ID'sini girin..." style="background: var(--bg-main); border: 1px solid var(--border-glass); color: var(--text-primary); padding: 6px 10px; border-radius: 4px; font-size: 13px; font-family: monospace; flex: 1;" />
+                    </div>
+                    <button class="try-btn execute" onclick="executeApi('DELETE', '/api/products/' + (document.getElementById('dyn-id-5').value || '1'), null, 'res-prod-delete-9')">Test Et (Execute)</button>
                 </div>
                 <div class="swagger-output">
                     <label>Response</label>
@@ -415,7 +435,7 @@
             <div class="swagger-body" id="swagger-ord-post-11">
                 <div class="swagger-input">
                     <label>Request Body (JSON)</label>
-                    <textarea id="body-ord-post-11">{"productId": "1", "quantity": 2}</textarea>
+                    <textarea id="body-ord-post-11">{"productId": "1", "userId": "test-user-id", "quantity": 2, "totalPrice": 30000}</textarea>
                     <button class="try-btn execute" onclick="executeApi('POST', '/api/orders', 'body-ord-post-11', 'res-ord-post-11')">Test Et (Execute)</button>
                 </div>
                 <div class="swagger-output">
@@ -428,13 +448,17 @@
         <div class="swagger-item get">
             <div class="swagger-header" onclick="toggleSwagger('ord-get-12')">
                 <span class="method get">GET</span>
-                <span class="endpoint">/api/orders/1</span>
+                <span class="endpoint">/api/orders/:id</span>
                 <span class="desc">Tekil sipariş getir. (Auth Token)</span>
             </div>
             <div class="swagger-body" id="swagger-ord-get-12">
                 <div class="swagger-input">
                     <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px;">Gövde (Body) gerektirmez.</p>
-                    <button class="try-btn execute" onclick="executeApi('GET', '/api/orders/1', null, 'res-ord-get-12')">Test Et (Execute)</button>
+                    <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                        <label style="font-size: 13px; color: var(--text-secondary);">Hedef ID:</label>
+                        <input type="text" id="dyn-id-6" placeholder="Kayıt ID'sini girin..." style="background: var(--bg-main); border: 1px solid var(--border-glass); color: var(--text-primary); padding: 6px 10px; border-radius: 4px; font-size: 13px; font-family: monospace; flex: 1;" />
+                    </div>
+                    <button class="try-btn execute" onclick="executeApi('GET', '/api/orders/' + (document.getElementById('dyn-id-6').value || '1'), null, 'res-ord-get-12')">Test Et (Execute)</button>
                 </div>
                 <div class="swagger-output">
                     <label>Response</label>
@@ -446,14 +470,18 @@
         <div class="swagger-item put">
             <div class="swagger-header" onclick="toggleSwagger('ord-put-13')">
                 <span class="method put">PUT</span>
-                <span class="endpoint">/api/orders/1</span>
+                <span class="endpoint">/api/orders/:id</span>
                 <span class="desc">Sipariş durumunu güncelle. (Auth Token)</span>
             </div>
             <div class="swagger-body" id="swagger-ord-put-13">
                 <div class="swagger-input">
                     <label>Request Body (JSON)</label>
                     <textarea id="body-ord-put-13">{"status": "shipped"}</textarea>
-                    <button class="try-btn execute" onclick="executeApi('PUT', '/api/orders/1', 'body-ord-put-13', 'res-ord-put-13')">Test Et (Execute)</button>
+                    <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                        <label style="font-size: 13px; color: var(--text-secondary);">Hedef ID:</label>
+                        <input type="text" id="dyn-id-7" placeholder="Kayıt ID'sini girin..." style="background: var(--bg-main); border: 1px solid var(--border-glass); color: var(--text-primary); padding: 6px 10px; border-radius: 4px; font-size: 13px; font-family: monospace; flex: 1;" />
+                    </div>
+                    <button class="try-btn execute" onclick="executeApi('PUT', '/api/orders/' + (document.getElementById('dyn-id-7').value || '1'), 'body-ord-put-13', 'res-ord-put-13')">Test Et (Execute)</button>
                 </div>
                 <div class="swagger-output">
                     <label>Response</label>
@@ -465,13 +493,17 @@
         <div class="swagger-item delete">
             <div class="swagger-header" onclick="toggleSwagger('ord-delete-14')">
                 <span class="method delete">DELETE</span>
-                <span class="endpoint">/api/orders/1</span>
+                <span class="endpoint">/api/orders/:id</span>
                 <span class="desc">Siparişi iptal et. (Auth Token)</span>
             </div>
             <div class="swagger-body" id="swagger-ord-delete-14">
                 <div class="swagger-input">
                     <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px;">Gövde (Body) gerektirmez.</p>
-                    <button class="try-btn execute" onclick="executeApi('DELETE', '/api/orders/1', null, 'res-ord-delete-14')">Test Et (Execute)</button>
+                    <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                        <label style="font-size: 13px; color: var(--text-secondary);">Hedef ID:</label>
+                        <input type="text" id="dyn-id-8" placeholder="Kayıt ID'sini girin..." style="background: var(--bg-main); border: 1px solid var(--border-glass); color: var(--text-primary); padding: 6px 10px; border-radius: 4px; font-size: 13px; font-family: monospace; flex: 1;" />
+                    </div>
+                    <button class="try-btn execute" onclick="executeApi('DELETE', '/api/orders/' + (document.getElementById('dyn-id-8').value || '1'), null, 'res-ord-delete-14')">Test Et (Execute)</button>
                 </div>
                 <div class="swagger-output">
                     <label>Response</label>

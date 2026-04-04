@@ -1,6 +1,6 @@
 # E-Ticaret Mikroservis Altyapısı ve API Gateway Uygulaması
 
-**Ekip Üyeleri:** Cil Denizhan & Meliha Damla  
+**Ekip Üyeleri:** Denizhan Çil-231307104 & Meliha Damla Coşkun-231307113 
 **Tarih:** Nisan 2026
 
 ---

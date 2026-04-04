@@ -45,6 +45,11 @@ class Server {
                 timestamp: new Date().toISOString()
             });
         });
+
+        this.app.get('/api/logs', (req, res) => {
+            const logs = RequestLogger.getRecentLogs(50);
+            res.status(200).json(logs);
+        });
     }
 
     private setupProxy(): void {

@@ -4,7 +4,7 @@ const JWT_SECRET = process.env['JWT_SECRET'] || 'super_secret_dispatcher_key';
 export class AuthMiddleware {
     public static verifyToken(req: Request, res: Response, next: NextFunction): void {
         const path = req.path;
-        if (path.startsWith('/api/auth/login') || path.startsWith('/api/auth/register') || path.startsWith('/api/health') || path.startsWith('/api/system-status')) {
+        if (path.startsWith('/api/auth/login') || path.startsWith('/api/auth/register') || path.startsWith('/api/health') || path.startsWith('/api/system-status') || path.startsWith('/api/logs') || path === '/' || !path.startsWith('/api') || path.startsWith('/api/auth/health')) {
             return next();
         }
         const authHeader = req.headers.authorization;

@@ -4,10 +4,10 @@ services:
   mongo:
     image: mongo:latest
     container_name: mongodb_server
-    ports:
-      - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    networks:
+      - internal
 
   auth-service:
     build: 
@@ -18,6 +18,8 @@ services:
       - MONGO_URI=mongodb://mongo:27017/auth_db
     depends_on:
       - mongo
+    networks:
+      - internal
 
   product-service:
     build: 
@@ -28,6 +30,8 @@ services:
       - MONGO_URI=mongodb://mongo:27017/product_db
     depends_on:
       - mongo
+    networks:
+      - internal
 
   order-service:
     build: 
@@ -38,6 +42,8 @@ services:
       - MONGO_URI=mongodb://mongo:27017/order_db
     depends_on:
       - mongo
+    networks:
+      - internal
 
   dispatcher:
     build: 
@@ -55,6 +61,16 @@ services:
       - auth-service
       - product-service
       - order-service
+    networks:
+      - internal
+      - external
 
 volumes:
   mongo_data:
+
+networks:
+  internal:
+    driver: bridge
+    internal: true
+  external:
+    driver: bridge

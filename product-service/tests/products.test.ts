@@ -1,6 +1,5 @@
 import request from 'supertest';
 import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
-
 jest.mock('../src/models/ProductModel.js', () => {
     let memoryDb: any[] = [];
     return {
@@ -22,25 +21,19 @@ jest.mock('../src/models/ProductModel.js', () => {
         __addDoc: (doc: any) => { memoryDb.push(doc); }
     };
 });
-
 jest.mock('../src/database/MongoDatabase.js', () => {
     return { connectDB: jest.fn(async () => { return; }) };
 });
-
 import app from '../src/server.js';
 const { __clearMemoryDb, __addDoc } = require('../src/models/ProductModel.js');
-
 describe('Product Service - Urun Yonetimi Testleri', () => {
     beforeEach(() => { __clearMemoryDb(); });
     afterEach(() => { __clearMemoryDb(); });
-
-    // Unit tests that test express interaction are mostly mocked out since DB is mocked
     it('GET /health - 200 donmeli', async () => {
         const response = await request(app).get('/health');
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty('status', 'ok');
     });
-
     it('GET / - Tum urunler listelenmeli', async () => {
         __addDoc({ id: '1', name: 'Telefon', price: 5000, stock: 10 });
         const response = await request(app).get('/');

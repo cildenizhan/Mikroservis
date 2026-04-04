@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem İzleme Paneli</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="logo">
+                <div class="logo-icon"><i class="fa-solid fa-shapes"></i></div>
+                <span class="logo-text">MicroOps</span>
+            </div>
+            <ul class="nav-links">
+                <li class="nav-item active" data-target="tab-overview"><i class="fa-solid fa-chart-line"></i> <span>Genel Bakış</span></li>
+                <li class="nav-item" data-target="tab-services"><i class="fa-solid fa-server"></i> <span>Servisler</span></li>
+                <li class="nav-item" data-target="tab-performance"><i class="fa-solid fa-bolt"></i> <span>Performans</span></li>
+                <li class="nav-item" data-target="tab-security"><i class="fa-solid fa-shield-halved"></i> <span>Güvenlik</span></li>
+            </ul>
+            <div class="bottom-nav">
+                <li class="nav-item" data-target="tab-settings"><i class="fa-solid fa-gear"></i> <span>Ayarlar</span></li>
+            </div>
+        </nav>
+        <main class="main-content">
+            <header class="top-header">
+                <div>
+                    <h1>Sistem Durumu</h1>
+                    <p class="subtitle" id="current-time">Gerçek zamanlı metrikler yükleniyor...</p>
+                </div>
+                <div class="header-actions">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Servis veya log ara...">
+                    </div>
+                    <button class="icon-btn action-btn"><i class="fa-regular fa-bell"></i></button>
+                    <div class="user-profile">
+                        <img src="https://ui-avatars.com/api/?name=Admin+User&background=6366f1&color=fff&rounded=true" alt="User">
+                    </div>
+                </div>
+            </header>
+            <div class="tabs-container">
+                <div id="tab-overview" class="tab-pane active-tab">
+                    <div class="dashboard-grid">
+                <div class="kpi-cards">
+                    <div class="card kpi-card glass-panel">
+                        <div class="kpi-header">
+                            <h3>Aylık İstekler</h3>
+                            <i class="fa-solid fa-arrow-trend-up text-success"></i>
+                        </div>
+                        <div class="kpi-value">
+                            <h2>1.24M</h2>
+                            <span class="badge success">+12%</span>
+                        </div>
+                    </div>
+                    <div class="card kpi-card glass-panel">
+                        <div class="kpi-header">
+                            <h3>Ortalama Yanıt</h3>
+                            <i class="fa-solid fa-stopwatch text-warning"></i>
+                        </div>
+                        <div class="kpi-value">
+                            <h2 id="avg-latency">48ms</h2>
+                            <span class="badge warning">-2ms</span>
+                        </div>
+                    </div>
+                    <div class="card kpi-card glass-panel">
+                        <div class="kpi-header">
+                            <h3>Hata Oranı</h3>
+                            <i class="fa-solid fa-triangle-exclamation text-danger"></i>
+                        </div>
+                        <div class="kpi-value">
+                            <h2 id="error-rate">0.02%</h2>
+                            <span class="badge error">+0.01%</span>
+                        </div>
+                    </div>
+                    <div class="card kpi-card glass-panel active-highlight">
+                        <div class="kpi-header">
+                            <h3>Aktif Servis</h3>
+                            <i class="fa-solid fa-network-wired text-primary"></i>
+                        </div>
+                        <div class="kpi-value">
+                            <h2 id="active-services-count">4/4</h2>
+                            <span class="badge success">Healthy</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card list-card glass-panel">
+                    <div class="card-header">
+                        <h2>Mikroservis Durumları</h2>
+                        <button class="refresh-btn" onclick="triggerRefresh()">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </button>
+                    </div>
+                    <div class="service-list">
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-icon"><i class="fa-solid fa-route"></i></div>
+                                <div>
+                                    <h4>Dispatcher</h4>
+                                    <p>API Gateway - Port 3000</p>
+                                </div>
+                            </div>
+                            <div class="service-metrics">
+                                <div class="metric"><i class="fa-solid fa-microchip"></i> <span id="disp-cpu">22%</span></div>
+                                <div class="metric"><i class="fa-solid fa-memory"></i> <span id="disp-mem">128MB</span></div>
+                            </div>
+                            <div class="status-indicator">
+                                <span class="pulse green"></span>
+                                <span class="status-text">Online</span>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-icon"><i class="fa-solid fa-key"></i></div>
+                                <div>
+                                    <h4>Auth Service</h4>
+                                    <p>Authentication - Port 3001</p>
+                                </div>
+                            </div>
+                            <div class="service-metrics">
+                                <div class="metric"><i class="fa-solid fa-microchip"></i> <span id="auth-cpu">15%</span></div>
+                                <div class="metric"><i class="fa-solid fa-memory"></i> <span id="auth-mem">86MB</span></div>
+                            </div>
+                            <div class="status-indicator">
+                                <span class="pulse green"></span>
+                                <span class="status-text">Online</span>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-icon"><i class="fa-solid fa-box"></i></div>
+                                <div>
+                                    <h4>Product Service</h4>
+                                    <p>Inventory - Port 3002</p>
+                                </div>
+                            </div>
+                            <div class="service-metrics">
+                                <div class="metric"><i class="fa-solid fa-microchip"></i> <span id="prod-cpu">18%</span></div>
+                                <div class="metric"><i class="fa-solid fa-memory"></i> <span id="prod-mem">110MB</span></div>
+                            </div>
+                            <div class="status-indicator">
+                                <span class="pulse green"></span>
+                                <span class="status-text">Online</span>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+                                <div>
+                                    <h4>Order Service</h4>
+                                    <p>Transactions - Port 3003</p>
+                                </div>
+                            </div>
+                            <div class="service-metrics">
+                                <div class="metric"><i class="fa-solid fa-microchip"></i> <span id="order-cpu">10%</span></div>
+                                <div class="metric"><i class="fa-solid fa-memory"></i> <span id="order-mem">95MB</span></div>
+                            </div>
+                            <div class="status-indicator">
+                                <span class="pulse green"></span>
+                                <span class="status-text">Online</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card chart-card glass-panel">
+                    <div class="card-header">
+                        <h2>Trafik Yükü (Son 60s)</h2>
+                    </div>
+                    <div class="chart-container">
+                        <div class="mock-chart lines-chart" id="traffic-chart">
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-services" class="tab-pane">
+                    <div class="card glass-panel" style="margin-bottom: 24px;">
+                        <div class="card-header">
+                            <h2>Tüm Mikroservislerin Detaylı Durumu</h2>
+                            <p class="subtitle">Servislerin uptime, anlık yük ve konfigürasyon özetleri.</p>
+                        </div>
+                        <div style="padding: 20px; color: var(--text-secondary); text-align: center;">
+                            <i class="fa-solid fa-gears" style="font-size: 48px; margin-bottom: 16px; color: var(--accent-primary);"></i>
+                            <h3>Gelişmiş Servis Yönetimi</h3>
+                            <p>Servisleri tek tıkla yeniden başlatma veya loglarını indirme özellikleri eklenecektir.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-performance" class="tab-pane">
+                    <div class="card glass-panel">
+                        <h2>Performans Analizi</h2>
+                        <p class="subtitle" style="margin-top:10px;">Detaylı bellek sızıntısı analizi ve CPU grafikleri yükleniyor...</p>
+                    </div>
+                </div>
+                <div id="tab-security" class="tab-pane">
+                    <div class="card glass-panel">
+                        <h2>Güvenlik Paneli</h2>
+                        <p class="subtitle" style="margin-top:10px;">Son başarısız giriş denemeleri ve JWT token red logları listelenecek.</p>
+                    </div>
+                </div>
+                <div id="tab-settings" class="tab-pane">
+                    <div class="card glass-panel">
+                        <h2>Sistem Ayarları</h2>
+                        <p class="subtitle" style="margin-top:10px;">Karanlık/Aydınlık tema, uyarı eşik değerleri ve bildirim ayarları.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

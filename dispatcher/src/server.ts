@@ -3,7 +3,8 @@ import { RequestLogger } from './middleware/RequestLogger.js';
 import { ServiceRouter } from './router/ServiceRouter.js';
 import { AuthMiddleware } from './middleware/AuthMiddleware.js';
 import promBundle from 'express-prom-bundle';
-
+import os from 'os';
+import path from 'path';
 const metricsMiddleware = promBundle({includeMethod: true, includePath: true});
 
 class Server {
@@ -21,12 +22,28 @@ class Server {
         this.app.use(metricsMiddleware);
         this.app.use(express.json());
         this.app.use(RequestLogger.middleware);
+        this.app.use(express.static(path.join(__dirname, '../public')));
         this.app.use(AuthMiddleware.verifyToken);
     }
 
     private routes(): void {
         this.app.get('/api/health', (req, res) => {
             res.status(200).send('OK');
+        });
+
+        this.app.get('/api/system-status', (req, res) => {
+            const memUsage = process.memoryUsage();
+            
+            res.status(200).json({
+                uptime: process.uptime(),
+                memory: {
+                    rss: Math.round(memUsage.rss / 1024 / 1024),
+                    heapTotal: Math.round(memUsage.heapTotal / 1024 / 1024),
+                    heapUsed: Math.round(memUsage.heapUsed / 1024 / 1024),
+                },
+                loadAverage: os.loadavg(),
+                timestamp: new Date().toISOString()
+            });
         });
     }
 

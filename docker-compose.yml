@@ -56,19 +56,5 @@ services:
       - product-service
       - order-service
 
-  prometheus:
-    image: prom/prometheus:latest
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-
-  grafana:
-    image: grafana/grafana:latest
-    ports:
-      - "3004:3000"
-    depends_on:
-      - prometheus
-
 volumes:
   mongo_data:

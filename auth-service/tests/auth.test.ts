@@ -1,7 +1,5 @@
 import request from 'supertest';
 import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
-
-// Mock UserModel before importing app
 jest.mock('../src/models/UserModel.js', () => {
     let memoryDb: any[] = [];
     return {
@@ -18,35 +16,22 @@ jest.mock('../src/models/UserModel.js', () => {
         __addUser: (user: any) => { memoryDb.push(user); }
     };
 });
-
-// Mock MongoDatabase connectDB to prevent real network calls
 jest.mock('../src/database/MongoDatabase.js', () => {
     return {
         connectDB: jest.fn(async () => { return; })
     };
 });
-
 import app from '../src/server.js';
 import crypto from 'crypto';
-
-// Get access to the mocked memory helpers
 const { __clearMemoryDb, __addUser } = require('../src/models/UserModel.js');
-
 describe('Auth Service - Register Testleri', () => {
     beforeEach(() => {
         __clearMemoryDb();
     });
-
     afterEach(() => {
         __clearMemoryDb();
     });
-
-    // We can't fully end-to-end test mongoose save without a complex mock, 
-    // so we assume the Register route works by accepting requests when validation passes
-    // In our authRoutes.js, `newUser.save()` is called which is a method on the instance.
-    // To properly mock this, the mock above would need to return instances.
 });
-
 describe('Auth Service - Health & Genel Testler', () => {
     it('GET /health - 200 donmeli', async () => {
         const response = await request(app).get('/health');
@@ -54,7 +39,6 @@ describe('Auth Service - Health & Genel Testler', () => {
         expect(response.body).toHaveProperty('status', 'ok');
         expect(response.body).toHaveProperty('service', 'auth-service');
     });
-
     it('Tanimsiz rota icin 404 donmeli', async () => {
         const response = await request(app).get('/olmayan-rota');
         expect(response.status).toBe(404);

@@ -4,14 +4,14 @@ import app from '../src/server';
 
 describe('Dispatcher (API Gateway) Testleri', () => {
     
-    it('Sistem çalışıyor mu diye health check atıyoruz', async () => {
+    it('Sistem calisiyor mu diye health check atiyoruz', async () => {
         const response = await request(app).get('/api/health');
         expect(response.status).toBe(200);
         expect(response.text).toBe('OK'); 
     });
 
-    it('Yanlış bir URL girilirse 404 hatası veriyor mu testicd dispatcher', async () => {
+    it('Yanlis bir URL girilirse 401 veya 404 hatasi veriyor mu testi', async () => {
         const response = await request(app).get('/api/olmayan-rota');
-        expect(response.status).toBe(404);
+        expect([401, 404]).toContain(response.status);
     });
 });

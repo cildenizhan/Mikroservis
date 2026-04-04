@@ -38,20 +38,20 @@ describe('Loglama Middleware Testleri', () => {
     });
     it('Birden fazla istek sırayla loglanmalı', async () => {
         await request(app).get('/api/health');
-        await request(app).get('/api/olmayan-rota');
+        await request(app).get('/api/system-status');
         const logs = RequestLogger.getLogs();
         expect(logs.length).toBe(2);
         expect(logs[0]!.url).toBe('/api/health');
-        expect(logs[1]!.url).toBe('/api/olmayan-rota');
+        expect(logs[1]!.url).toBe('/api/system-status');
     });
-    it('404 hatası loglanmalı', async () => {
-        await request(app).get('/api/olmayan-rota');
+    it('401 hatası loglanmalı', async () => {
+        await request(app).get('/api/products');
         const logs = RequestLogger.getLogs();
         const lastLog = logs[logs.length - 1];
-        expect(lastLog).toHaveProperty('statusCode', 404);
+        expect(lastLog).toHaveProperty('statusCode', 401);
     });
     it('POST isteği loglanmalı', async () => {
-        await request(app).post('/api/health');
+        await request(app).post('/api/auth/register').send({});
         const logs = RequestLogger.getLogs();
         const lastLog = logs[logs.length - 1];
         expect(lastLog).toHaveProperty('method', 'POST');

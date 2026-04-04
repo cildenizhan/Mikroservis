@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { ProductModel } from '../models/ProductModel.js';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 
 const router = Router();
 

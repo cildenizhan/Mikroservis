@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { UserModel } from '../models/UserModel.js';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 
 const router = Router();

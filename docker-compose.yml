@@ -65,8 +65,75 @@ services:
       - internal
       - external
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus_server
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=7d'
+    ports:
+      - "9090:9090"
+    depends_on:
+      - dispatcher
+    networks:
+      - internal
+      - external
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana_server
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+    ports:
+      - "3001:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - internal
+      - external
+
+  locust:
+    build:
+      context: ./monitoring/locust
+      dockerfile: Dockerfile
+    container_name: locust_master
+    ports:
+      - "8089:8089"
+    environment:
+      - LOCUST_HOST=http://dispatcher:3000
+      - LOCUST_LOCUSTFILE=/mnt/locust/locustfile.py
+    depends_on:
+      - dispatcher
+    networks:
+      - internal
+      - external
+
+  locust-exporter:
+    image: containersol/locust_exporter
+    container_name: locust_exporter
+    environment:
+      - LOCUST_EXPORTER_URI=http://locust:8089
+    ports:
+      - "9646:9646"
+    depends_on:
+      - locust
+    networks:
+      - internal
+      - external
+
 volumes:
   mongo_data:
+  prometheus_data:
+  grafana_data:
 
 networks:
   internal:

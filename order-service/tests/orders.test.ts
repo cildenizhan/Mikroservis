@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
 
-jest.mock('../src/models/OrderModel.js', () => {
+jest.mock('../src/models/OrderModel', () => {
     let memoryDb: any[] = [];
     return {
         OrderModel: {
@@ -23,12 +23,12 @@ jest.mock('../src/models/OrderModel.js', () => {
     };
 });
 
-jest.mock('../src/database/MongoDatabase.js', () => {
+jest.mock('../src/database/MongoDatabase', () => {
     return { connectDB: jest.fn(async () => { return; }) };
 });
 
-import app from '../src/server.js';
-const { __clearMemoryDb, __addDoc } = require('../src/models/OrderModel.js');
+import app from '../src/server';
+const { __clearMemoryDb, __addDoc } = require('../src/models/OrderModel');
 
 describe('Order Service - Siparis Yonetimi Testleri', () => {
     beforeEach(() => { __clearMemoryDb(); });

@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
-jest.mock('../src/models/ProductModel.js', () => {
+jest.mock('../src/models/ProductModel', () => {
     let memoryDb: any[] = [];
     return {
         ProductModel: {
@@ -21,11 +21,11 @@ jest.mock('../src/models/ProductModel.js', () => {
         __addDoc: (doc: any) => { memoryDb.push(doc); }
     };
 });
-jest.mock('../src/database/MongoDatabase.js', () => {
+jest.mock('../src/database/MongoDatabase', () => {
     return { connectDB: jest.fn(async () => { return; }) };
 });
-import app from '../src/server.js';
-const { __clearMemoryDb, __addDoc } = require('../src/models/ProductModel.js');
+import app from '../src/server';
+const { __clearMemoryDb, __addDoc } = require('../src/models/ProductModel');
 describe('Product Service - Urun Yonetimi Testleri', () => {
     beforeEach(() => { __clearMemoryDb(); });
     afterEach(() => { __clearMemoryDb(); });

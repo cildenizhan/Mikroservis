@@ -1,0 +1,21 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: 'dispatcher'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['dispatcher:3000']
+        labels:
+          service: 'dispatcher'
+
+  - job_name: 'locust'
+    static_configs:
+      - targets: ['locust-exporter:9646']
+        labels:
+          service: 'locust'
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']

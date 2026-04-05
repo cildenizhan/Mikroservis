@@ -275,12 +275,28 @@ yazıldığında, k6 aracı farklı yoğunluk senaryolarıyla (50, 100, 200, 500
 | Yüksek Yük | 200 | 2dk | ~48ms | ~85ms | %99.8 | ~24.000 |
 | Stres Testi | 500 | 2dk | ~95ms | ~180ms | %99.2 | ~60.000 |
 
-### Test Sonuçları Çıktısı Tablosu
-
+### Test Sonuçları Çıktısı
+<img width="1102" height="468" alt="authtest" src="https://github.com/user-attachments/assets/22b6bad8-d04a-4cff-a107-fa3ac4ebf4b3" />
+<img width="1108" height="353" alt="ordertest" src="https://github.com/user-attachments/assets/a59ed107-1f0b-4140-89a1-cb2bed9af048" />
+<img width="1065" height="353" alt="dispatchertest" src="https://github.com/user-attachments/assets/d6539062-fe9e-49c0-b2a0-c05c0ea4b900" />
 
 
 ### Uygulama Arayüzü İçerisinden Ekran Görüntüleri (Dashboard Yönetim Paneli vb.)
 
+**DASHBOARD**
+<img width="1893" height="898" alt="dashboard1" src="https://github.com/user-attachments/assets/c224d990-f65c-4c24-88da-e84c2e066001" />
+<img width="1917" height="902" alt="dash2" src="https://github.com/user-attachments/assets/5355b71c-72c9-4f07-871a-c9a5d672b0a6" />
+<img width="1918" height="903" alt="swagger1" src="https://github.com/user-attachments/assets/7148a81a-b029-4168-8b64-06255c6a4247" />
+<img width="1918" height="905" alt="swagger2" src="https://github.com/user-attachments/assets/1a3d48ac-0997-4556-97a0-f8f4b9f89d66" />
+
+**GRAFANA**
+<img width="1918" height="912" alt="grafana1" src="https://github.com/user-attachments/assets/d8c61843-4c34-43a0-81b5-97067da655e1" />
+<img width="1918" height="913" alt="grafana2" src="https://github.com/user-attachments/assets/6000907d-3220-4167-8df1-8d2581385ae6" />
+<img width="1918" height="903" alt="grafana3" src="https://github.com/user-attachments/assets/e4ee9d0a-226b-408b-98c1-77b435ab95aa" />
+
+**LOCUST**
+<img width="1918" height="908" alt="locust100VU" src="https://github.com/user-attachments/assets/c3944840-cca2-4525-9d5e-ba013e0cb790" />
+<img width="1918" height="915" alt="locust100VU2" src="https://github.com/user-attachments/assets/ca48071e-9990-4b04-9b94-88ea3da127be" />
 
 
 ---

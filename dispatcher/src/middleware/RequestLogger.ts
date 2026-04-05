@@ -28,9 +28,11 @@ export class RequestLogger {
 
             RequestLogger.logs.push(logEntry);
 
-            console.log(
-                `[${logEntry.timestamp}] ${logEntry.method} ${logEntry.url} - ${logEntry.statusCode} (${logEntry.responseTime}ms)`
-            );
+            if (process.env.NODE_ENV !== 'test') {
+                console.log(
+                    `[${logEntry.timestamp}] ${logEntry.method} ${logEntry.url} - ${logEntry.statusCode} (${logEntry.responseTime}ms)`
+                );
+            }
         };
 
         let logged = false;
